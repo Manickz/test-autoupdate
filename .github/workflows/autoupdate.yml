@@ -1,0 +1,29 @@
+name: Merge Main to Feature Branches
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  merge-to-feature:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Necessary to fetch all branches
+
+    - name: Configure Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Merge Main into Feature Branch
+      run: |
+        # Replace 'your-feature-branch-name' with your actual feature branch name
+        FEATURE_BRANCH="test"
+        git fetch origin
+        git checkout $FEATURE_BRANCH
+        git merge origin/main --no-edit
+        git push origin $FEATURE_BRANCH
