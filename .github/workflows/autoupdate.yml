@@ -27,9 +27,10 @@ jobs:
         git pull origin main
 
     - name: Push New Branch
-      run: git push --set-upstream origin $PR_BRANCH
+      run: |
+        git push --set-upstream origin $PR_BRANCH
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GIT_ASKPASS: echo ${{ secrets.TOKEN }}
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
@@ -38,5 +39,5 @@ jobs:
         branch: $PR_BRANCH
         title: "Merge main into feature branch"
         body: "Automated PR to merge main changes into the feature branch."
-        base: "test" # Specify your feature branch name here
+        base: "your-feature-branch-name" # Specify your feature branch name here
         labels: "automerge" # Optional: Assign labels to the PR
