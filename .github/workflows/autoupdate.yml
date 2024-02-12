@@ -15,8 +15,6 @@ jobs:
         run: |
           git fetch origin main:main
           git reset --hard main
-          env:
-            GITHUB_TOKEN: ${{ secrets.TOKEN }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
