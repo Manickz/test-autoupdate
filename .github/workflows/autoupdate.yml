@@ -1,4 +1,4 @@
-name: Create PR from Main to Feature Branches
+name: Auto PR from Main to Feature Branch
 
 on:
   push:
@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  create-pr-to-feature:
+  setup-and-create-pr:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0 # Necessary to fetch all branches
-        token: ${{ secrets.TOKEN }} # Use the secret token for checkout
+        fetch-depth: 0 # Fetch all history for all branches and tags
+        token: ${{ secrets.TOKEN }} # Use the PAT for checkout
 
     - name: Configure Git
       run: |
@@ -22,12 +22,12 @@ jobs:
 
     - name: Create New Branch for PR
       run: |
-        PR_BRANCH="update-from-main-$(date +%Y%m%d%H%M%S)" # Unique branch name for the PR
+        PR_BRANCH="update-from-main-$(date +%Y%m%d%H%M%S)" # Generate a unique branch name
         git checkout -b $PR_BRANCH
         git pull origin main
 
-    - name: Push Changes to New Branch
-      run: git push origin $PR_BRANCH
+    - name: Push New Branch
+      run: git push --set-upstream origin $PR_BRANCH
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
@@ -35,8 +35,8 @@ jobs:
       uses: peter-evans/create-pull-request@v4
       with:
         token: ${{ secrets.TOKEN }}
-        branch: ${{ env.PR_BRANCH }} # The branch you've just pushed
+        branch: $PR_BRANCH
         title: "Merge main into feature branch"
         body: "Automated PR to merge main changes into the feature branch."
-        base: "your-feature-branch-name" # The target branch for the PR
+        base: "test" # Specify your feature branch name here
         labels: "automerge" # Optional: Assign labels to the PR
