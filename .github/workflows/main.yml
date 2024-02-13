@@ -1,12 +1,12 @@
-name: Merge Main to Feature Branches
+name: Merge QA-Main to Env Branches
 
 on:
   push:
     branches:
-      - qa-main
+      - qa-main # Trigger on pushes to qa-main instead of main
 
 jobs:
-  merge-to-feature:
+  merge-to-env:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -20,14 +20,14 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
-    - name: Merge Main into Feature Branches
+    - name: Merge QA-Main into Env Branches
       run: |
         git fetch origin
         # List all branches that start with env/, stripping the remote part
         for branch in $(git branch -r | grep 'origin/env/' | sed 's|origin/||'); do
           echo "Merging changes into $branch"
           git checkout $branch
-          git merge origin/qa-main --no-edit
+          git merge origin/qa-main --no-edit # Merge from qa-main
           # Push the changes using the secret token
           git push https://${{ secrets.TOKEN }}@github.com/${{ github.repository }} $branch
         done
