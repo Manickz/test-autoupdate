@@ -3,7 +3,7 @@ name: Merge Main to Feature Branches
 on:
   push:
     branches:
-      - main
+      - qa-main
 
 jobs:
   merge-to-feature:
@@ -27,7 +27,7 @@ jobs:
         for branch in $(git branch -r | grep 'origin/env/' | sed 's|origin/||'); do
           echo "Merging changes into $branch"
           git checkout $branch
-          git merge origin/main --no-edit
+          git merge origin/qa-main --no-edit
           # Push the changes using the secret token
           git push https://${{ secrets.TOKEN }}@github.com/${{ github.repository }} $branch
         done
