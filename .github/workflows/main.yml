@@ -3,7 +3,7 @@ name: Merge Main to Feature Branches
 on:
   push:
     branches:
-      - qa-main
+      - main
 
 jobs:
   merge-to-feature:
